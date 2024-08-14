@@ -1,19 +1,23 @@
 ﻿namespace ConsoleTaskTracker
 {
-    public class Task
+    public class Task(string description)
     {
-        public int TaskId { get; set; }
-        public string Description { get; set; }
-        public TaskStatus Status { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        private static int counter = 0;
+        public int TaskId { get; private set; } = ++counter;
+        public string Description { get; set; } = description;
+        public TaskStatus Status { get; set; } = TaskStatus.Todo;
+        public DateTime CreatedAt { get; private set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; private set; } = DateTime.Now;
 
-        public Task(string description)
+        public void MarkInProgress()
         {
-            TaskId = 1;
-            Description = description;
-            Status = TaskStatus.Todo;
-            CreatedAt = DateTime.Now;
+            Status = TaskStatus.InProgress;
+            UpdatedAt = DateTime.Now;
+        }
+
+        public void MarkDone()
+        {
+            Status = TaskStatus.Done;
             UpdatedAt = DateTime.Now;
         }
 

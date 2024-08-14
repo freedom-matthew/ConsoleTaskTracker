@@ -1,10 +1,16 @@
-﻿class Program
+﻿using ConsoleTaskTracker;
+
+class Program
 {
     static void Main(string[] args)
     {
-        string description = args[0];
+        string command = args[0];
 
-        ConsoleTaskTracker.Task task = new(description);
-        Console.WriteLine(task.Description);
+        TaskManager taskManager = new();
+
+        if (command == "add")
+        {
+            taskManager.AddTask(args[1]);
+        }
     }
 }

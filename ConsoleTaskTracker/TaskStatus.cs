@@ -1,6 +1,6 @@
 ﻿namespace ConsoleTaskTracker
 {
-    public enum Status
+    public enum TaskStatus
     {
         Todo = 1,
         InProgress = 2,

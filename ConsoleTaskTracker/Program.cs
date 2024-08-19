@@ -5,12 +5,32 @@ class Program
     static void Main(string[] args)
     {
         string command = args[0];
+        string item = args[1];
 
-        TaskManager taskManager = new();
-
-        if (command == "add")
+        switch (command)
         {
-            taskManager.AddTask(args[1]);
+            case "add":
+                ConsoleTaskTracker.Task task = new(item);
+                task.AddTaskToFile(task);
+                break;
+
+            case "read":
+                break;
+
+            case "update":
+                break;
+
+            case "delete":
+                break;
+
+            case "mark-todo":
+                break;
+
+            case "mark-in-progress":
+                break;
+
+            case "mark-done":
+                break;       
         }
     }
 }

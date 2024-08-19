@@ -1,33 +1,38 @@
-﻿namespace ConsoleTaskTracker
+﻿using System.Text.Json;
+
+namespace ConsoleTaskTracker
 {
-    public class Task(string description)
+    public class Task
     {
-        private static int counter = 0;
-        public int TaskId { get; private set; } = ++counter;
-        public string Description { get; set; } = description;
-        public TaskStatus Status { get; set; } = TaskStatus.Todo;
-        public DateTime CreatedAt { get; private set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; private set; } = DateTime.Now;
+        private static int _counter = 0;
+        private readonly string filePath = @"C:\Users\svobo\Desktop\tasks.json";
+        public int TaskId { get; private set; }
+        public string Description { get; set; }
+        public TaskStatus Status { get; set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; set; }
 
-        public void MarkInProgress()
+        public Task(string description)
         {
-            Status = TaskStatus.InProgress;
-            UpdatedAt = DateTime.Now;
+            this.TaskId = ++_counter;
+            this.Description = description;
+            this.Status = TaskStatus.Todo;
+            this.CreatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.Now;
         }
 
-        public void MarkDone()
+        public void AddTaskToFile(Task task)
         {
-            Status = TaskStatus.Done;
-            UpdatedAt = DateTime.Now;
-        }
+            List<Task> tasks = [];
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                tasks = JsonSerializer.Deserialize<List<Task>>(json) ?? [];
+            }
 
-        public override string ToString()
-        {
-            return $"Task ID: {TaskId}\n" +
-                   $"Description: {Description}\n" +
-                   $"Status: {Status}\n" +
-                   $"Created At: {CreatedAt}\n" +
-                   $"Updated At: {UpdatedAt}";
+            tasks.Add(task);
+            string updatedJson = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, updatedJson);
         }
     }
 }

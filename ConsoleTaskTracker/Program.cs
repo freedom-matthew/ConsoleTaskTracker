@@ -9,12 +9,13 @@ class Program
 
         if (command == "add")
         {
+            taskService.FindLeastId();
             taskService.AddTaskToFile(args[1]);
         }
 
-        else if (command == "update")
+        /*else if (command == "update")
         {
             taskService.UpdateTaskInFile(Convert.ToInt32(args[1]), args[2]);
-        }
+        }*/
     }
 }

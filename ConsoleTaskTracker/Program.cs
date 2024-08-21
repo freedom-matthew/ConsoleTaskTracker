@@ -1,36 +1,18 @@
-﻿using ConsoleTaskTracker;
+﻿using System.Text.Json;
 
 class Program
 {
     static void Main(string[] args)
     {
-        string command = args[0];
-        string item = args[1];
+        //string command = args[0];
 
-        switch (command)
-        {
-            case "add":
-                ConsoleTaskTracker.Task task = new(item);
-                task.AddTaskToFile(task);
-                break;
+        //if (command == "add")
+        //{
+        //    string item = args[1];
+        //}
 
-            case "read":
-                break;
+        ConsoleTaskTracker.Entities.Task task = new("IDC");
 
-            case "update":
-                break;
-
-            case "delete":
-                break;
-
-            case "mark-todo":
-                break;
-
-            case "mark-in-progress":
-                break;
-
-            case "mark-done":
-                break;       
-        }
+        JsonSerializer.Serialize(task);
     }
 }

@@ -1,18 +1,20 @@
-﻿using System.Text.Json;
+﻿using ConsoleTaskTracker.Services;
 
 class Program
 {
     static void Main(string[] args)
     {
-        //string command = args[0];
+        string command = args[0];
+        TaskService taskService = new();
 
-        //if (command == "add")
-        //{
-        //    string item = args[1];
-        //}
+        if (command == "add")
+        {
+            taskService.AddTaskToFile(args[1]);
+        }
 
-        ConsoleTaskTracker.Entities.Task task = new("IDC");
-
-        JsonSerializer.Serialize(task);
+        else if (command == "update")
+        {
+            taskService.UpdateTaskInFile(Convert.ToInt32(args[1]), args[2]);
+        }
     }
 }

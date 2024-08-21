@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleTaskTracker": {
+      "commandName": "Project",
+      "commandLineArgs": "add \"Buy jelly beans\""
+    }
+  }
+}

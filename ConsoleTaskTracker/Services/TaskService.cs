@@ -4,21 +4,31 @@ namespace ConsoleTaskTracker.Services
 {
     internal class TaskService
     {
-        private readonly string filePath = @"C:\Users\svobo\Desktop\tasks.json";
+        // private readonly string _filePath = @"C:\Users\svobo\Desktop\tasks.json";
+        private readonly string _filePath = @"C:\Users\msvoboda\Desktop\tasks.json";
 
-        public void AddTaskToFile(Task task)
+        public TaskService()
         {
-            List<Task> tasks = [];
 
-            if (File.Exists(filePath))
+        }
+
+        public void AddTaskToFile(string description)
+        {
+            ConsoleTaskTracker.Entities.Task task = new()
             {
-                string json = File.ReadAllText(filePath);
-                tasks = JsonSerializer.Deserialize<List<Task>>(json) ?? [];
-            }
+                TaskId = 1,
+                Description = description,
+                Status = ConsoleTaskTracker.Entities.TaskStatus.Todo,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
 
-            tasks.Add(task);
-            string updatedJson = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, updatedJson);
+            string json = JsonSerializer.Serialize(task);
+            File.WriteAllText(_filePath, json);
+        }
+
+        public void UpdateTaskInFile(int id, string description)
+        {
         }
     }
 }

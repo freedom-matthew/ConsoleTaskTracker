@@ -14,7 +14,7 @@ namespace ConsoleTaskTracker.Services
             Converters = { new JsonStringEnumConverter() }
         };
 
-        private int FindMaxId()
+        private int FindGreatestId()
         {
             if (!File.Exists(_jsonFile))
             {
@@ -32,8 +32,8 @@ namespace ConsoleTaskTracker.Services
             {
                 List<Entities.Task> tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
 
-                int maxId = tasks.Max(task => task.TaskId);
-                return maxId;
+                int greatestId = tasks.Max(task => task.TaskId);
+                return greatestId;
             }            
         }
 
@@ -63,7 +63,7 @@ namespace ConsoleTaskTracker.Services
 
             Entities.Task task = new()
             {
-                TaskId = FindMaxId() + 1,
+                TaskId = FindGreatestId() + 1,
                 Description = description,
                 Status = Entities.TaskStatus.Todo,
                 CreatedAt = DateTime.Now,
@@ -72,8 +72,33 @@ namespace ConsoleTaskTracker.Services
 
             tasks.Add(task);
 
-            string updatedJson = JsonSerializer.Serialize(tasks, _options);
-            File.WriteAllText(_jsonFile, updatedJson);
+            string updatedJsonString = JsonSerializer.Serialize(tasks, _options);
+            File.WriteAllText(_jsonFile, updatedJsonString);
+        }
+
+        public void UpdateTaskFromFile(int taskId, string description)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteTaskFromFile(int taskId)
+        {
+            List<Entities.Task> tasks;
+
+            string jsonString = File.ReadAllText(_jsonFile);
+            tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
+
+            foreach (Entities.Task task in tasks)
+            {
+                if (task.TaskId == taskId)
+                {
+                    tasks.Remove(task);
+                    break;
+                }
+            }
+
+            string updatedJsonString = JsonSerializer.Serialize(tasks, _options);
+            File.WriteAllText(_jsonFile, updatedJsonString);
         }
     }
 }

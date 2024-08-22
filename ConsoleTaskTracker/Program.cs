@@ -9,12 +9,21 @@ class Program
 
         if (command == "add")
         {
-            taskService.AddTaskToFile(args[1]);
+            string description = args[1];
+            taskService.AddTaskToFile(description);
         }
 
-        /*else if (command == "update")
+        else if (command == "update")
         {
-            taskService.UpdateTaskInFile(Convert.ToInt32(args[1]), args[2]);
-        }*/
+            int taskId = int.Parse(args[1]);
+            string description = args[2];
+            taskService.UpdateTaskFromFile(taskId, description);            
+        }
+
+        else if (command == "delete")
+        {
+            int taskId = int.Parse(args[1]);
+            taskService.DeleteTaskFromFile(Convert.ToInt32(taskId));
+        }
     }
 }

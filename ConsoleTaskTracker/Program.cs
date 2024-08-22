@@ -9,7 +9,6 @@ class Program
 
         if (command == "add")
         {
-            taskService.FindLeastId();
             taskService.AddTaskToFile(args[1]);
         }
 

@@ -8,6 +8,12 @@ namespace ConsoleTaskTracker.Services
         private readonly string _jsonFile = @"C:\Users\svobo\Desktop\tasks.json";
         // private readonly string _jsonFile = @"C:\Users\msvoboda\Desktop\tasks.json";
 
+        private readonly JsonSerializerOptions _options = new()
+        {
+            WriteIndented = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
         private int FindMaxId()
         {
             if (!File.Exists(_jsonFile))
@@ -24,7 +30,7 @@ namespace ConsoleTaskTracker.Services
 
             else
             {
-                List<Entities.Task> tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString);
+                List<Entities.Task> tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
 
                 int maxId = tasks.Max(task => task.TaskId);
                 return maxId;
@@ -46,7 +52,7 @@ namespace ConsoleTaskTracker.Services
 
                 else
                 {
-                    tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString);
+                    tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
                 }
             }
 
@@ -65,13 +71,8 @@ namespace ConsoleTaskTracker.Services
             };
 
             tasks.Add(task);
-            JsonSerializerOptions options = new()
-            {
-                WriteIndented = true, // For pretty-printing the JSON
-                Converters = { new JsonStringEnumConverter() }
-            };
 
-            string updatedJson = JsonSerializer.Serialize(tasks, options);
+            string updatedJson = JsonSerializer.Serialize(tasks, _options);
             File.WriteAllText(_jsonFile, updatedJson);
         }
     }

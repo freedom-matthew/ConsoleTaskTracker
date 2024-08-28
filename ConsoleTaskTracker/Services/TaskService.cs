@@ -5,16 +5,16 @@ namespace ConsoleTaskTracker.Services
 {
     internal class TaskService
     {
-        private readonly string _jsonFile = @"C:\Users\svobo\Desktop\tasks.json";
+        private static readonly string _jsonFile = @"C:\Users\svobo\Desktop\tasks.json";
         // private readonly string _jsonFile = @"C:\Users\msvoboda\Desktop\tasks.json";
 
-        private readonly JsonSerializerOptions _options = new()
+        private static readonly JsonSerializerOptions _options = new()
         {
             WriteIndented = true,
             Converters = { new JsonStringEnumConverter() }
         };
 
-        private int FindGreatestId()
+        private static int FindGreatestId()
         {
             if (!File.Exists(_jsonFile))
             {
@@ -37,7 +37,7 @@ namespace ConsoleTaskTracker.Services
             }            
         }
 
-        public void AddTaskToFile(string description)
+        public static void AddTaskToFile(string description)
         {
             List<Entities.Task> tasks;
 
@@ -76,12 +76,12 @@ namespace ConsoleTaskTracker.Services
             File.WriteAllText(_jsonFile, updatedJsonString);
         }
 
-        public void UpdateTaskFromFile(int taskId, string description)
+        public static void UpdateTaskFromFile(int taskId, string description)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteTaskFromFile(int taskId)
+        public static void DeleteTaskFromFile(int taskId)
         {
             List<Entities.Task> tasks;
 

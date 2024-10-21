@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleTaskTracker": {
       "commandName": "Project",
-      "commandLineArgs": "delete 1"
+      "commandLineArgs": "add \"Call grandma\""
     }
   }
 }

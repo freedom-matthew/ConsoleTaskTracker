@@ -29,7 +29,14 @@ internal class TaskService
 
         List<Entities.Task> tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options) ?? [];
 
-        return tasks.Count > 0 ? tasks.Max(task => task.TaskId) : 0;
+        if (tasks.Count > 0)
+        {
+            return tasks.Max(task => task.TaskId);
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public static void AddTaskToFile(string description)
@@ -40,25 +47,25 @@ internal class TaskService
         {
             string jsonString = File.ReadAllText(_jsonFile);
 
-            if (string.IsNullOrWhiteSpace(jsonString))
+            try
             {
-                tasks = [];
+                tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options) ?? new List<Entities.Task>();
             }
-
-            else
+            catch (JsonException)
             {
-                tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options) ?? [];
+                tasks = new List<Entities.Task>();
             }
         }
-
         else
         {
             tasks = [];
         }
 
+        int newTaskId = FindGreatestId() + 1;
+
         Entities.Task task = new()
         {
-            TaskId = FindGreatestId() + 1,
+            TaskId = newTaskId,
             Description = description,
             Status = Entities.TaskStatus.Todo,
             CreatedAt = DateTime.Now,

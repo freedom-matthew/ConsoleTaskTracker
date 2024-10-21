@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleTaskTracker": {
       "commandName": "Project",
-      "commandLineArgs": "delete 2"
+      "commandLineArgs": "delete 1"
     }
   }
 }

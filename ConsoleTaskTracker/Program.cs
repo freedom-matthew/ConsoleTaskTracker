@@ -1,28 +1,22 @@
 ﻿using ConsoleTaskTracker.Services;
 
-class Program
+string command = args[0];
+
+if (command == "add")
 {
-    static void Main(string[] args)
-    {
-        string command = args[0];
+    string description = args[1];
+    TaskService.AddTaskToFile(description);
+}
 
-        if (command == "add")
-        {
-            string description = args[1];
-            TaskService.AddTaskToFile(description);
-        }
+else if (command == "update")
+{
+    int taskId = int.Parse(args[1]);
+    string description = args[2];
+    TaskService.UpdateTaskFromFile(taskId, description);
+}
 
-        else if (command == "update")
-        {
-            int taskId = int.Parse(args[1]);
-            string description = args[2];
-            TaskService.UpdateTaskFromFile(taskId, description);            
-        }
-
-        else if (command == "delete")
-        {
-            int taskId = int.Parse(args[1]);
-            TaskService.DeleteTaskFromFile(Convert.ToInt32(taskId));
-        }
-    }
+else if (command == "delete")
+{
+    int taskId = int.Parse(args[1]);
+    TaskService.DeleteTaskFromFile(Convert.ToInt32(taskId));
 }

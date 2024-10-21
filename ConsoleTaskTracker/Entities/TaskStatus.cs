@@ -1,9 +1,8 @@
-﻿namespace ConsoleTaskTracker.Entities
+﻿namespace ConsoleTaskTracker.Entities;
+
+internal enum TaskStatus
 {
-    internal enum TaskStatus
-    {
-        Todo = 1,
-        InProgress = 2,
-        Done = 3
-    }
+    Todo = 1,
+    InProgress = 2,
+    Done = 3
 }

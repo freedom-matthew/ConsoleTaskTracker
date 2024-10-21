@@ -1,104 +1,91 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ConsoleTaskTracker.Services
+namespace ConsoleTaskTracker.Services;
+
+internal class TaskService
 {
-    internal class TaskService
+    private static readonly string _jsonFile = @"C:\Users\msvoboda\Desktop\tasks.json";
+
+    private static readonly JsonSerializerOptions _options = new()
     {
-        private static readonly string _jsonFile = @"C:\Users\svobo\Desktop\tasks.json";
-        // private readonly string _jsonFile = @"C:\Users\msvoboda\Desktop\tasks.json";
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
-        private static readonly JsonSerializerOptions _options = new()
+    private static int FindGreatestId()
+    {
+        if (!File.Exists(_jsonFile))
         {
-            WriteIndented = true,
-            Converters = { new JsonStringEnumConverter() }
-        };
-
-        private static int FindGreatestId()
-        {
-            if (!File.Exists(_jsonFile))
-            {
-                return 0;
-            }
-            
-            string jsonString = File.ReadAllText(_jsonFile);
-            
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                return 0;
-            }
-
-            else
-            {
-                List<Entities.Task> tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
-
-                int greatestId = tasks.Max(task => task.TaskId);
-                return greatestId;
-            }            
+            return 0;
         }
 
-        public static void AddTaskToFile(string description)
+        string jsonString = File.ReadAllText(_jsonFile);
+
+        if (string.IsNullOrEmpty(jsonString))
         {
-            List<Entities.Task> tasks;
+            return 0;
+        }
 
-            if (File.Exists(_jsonFile))
-            {
-                string jsonString = File.ReadAllText(_jsonFile);
+        List<Entities.Task> tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options) ?? [];
 
-                if (string.IsNullOrWhiteSpace(jsonString))
-                {
-                    tasks = [];
-                }
+        return tasks.Count > 0 ? tasks.Max(task => task.TaskId) : 0;
+    }
 
-                else
-                {
-                    tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
-                }
-            }
+    public static void AddTaskToFile(string description)
+    {
+        List<Entities.Task> tasks;
 
-            else
+        if (File.Exists(_jsonFile))
+        {
+            string jsonString = File.ReadAllText(_jsonFile);
+
+            if (string.IsNullOrWhiteSpace(jsonString))
             {
                 tasks = [];
             }
 
-            Entities.Task task = new()
+            else
             {
-                TaskId = FindGreatestId() + 1,
-                Description = description,
-                Status = Entities.TaskStatus.Todo,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-
-            tasks.Add(task);
-
-            string updatedJsonString = JsonSerializer.Serialize(tasks, _options);
-            File.WriteAllText(_jsonFile, updatedJsonString);
-        }
-
-        public static void UpdateTaskFromFile(int taskId, string description)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static void DeleteTaskFromFile(int taskId)
-        {
-            List<Entities.Task> tasks;
-
-            string jsonString = File.ReadAllText(_jsonFile);
-            tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options);
-
-            foreach (Entities.Task task in tasks)
-            {
-                if (task.TaskId == taskId)
-                {
-                    tasks.Remove(task);
-                    break;
-                }
+                tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options) ?? [];
             }
-
-            string updatedJsonString = JsonSerializer.Serialize(tasks, _options);
-            File.WriteAllText(_jsonFile, updatedJsonString);
         }
+
+        else
+        {
+            tasks = [];
+        }
+
+        Entities.Task task = new()
+        {
+            TaskId = FindGreatestId() + 1,
+            Description = description,
+            Status = Entities.TaskStatus.Todo,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+
+        tasks.Add(task);
+
+        string updatedJsonString = JsonSerializer.Serialize(tasks, _options);
+        File.WriteAllText(_jsonFile, updatedJsonString);
+    }
+
+    public static void UpdateTaskFromFile(int taskId, string description)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void DeleteTaskFromFile(int taskId)
+    {
+        List<Entities.Task> tasks;
+
+        string jsonString = File.ReadAllText(_jsonFile);
+        tasks = JsonSerializer.Deserialize<List<Entities.Task>>(jsonString, _options) ?? [];
+
+        tasks.RemoveAll(task => task.TaskId == taskId);
+
+        string updatedJsonString = JsonSerializer.Serialize(tasks, _options);
+        File.WriteAllText(_jsonFile, updatedJsonString);
     }
 }

@@ -26,7 +26,7 @@ public class JsonTaskStore : ITaskStore
     
     public List<TodoItem> GetAll() => Load();
 
-    public TodoItem Add(string description)
+    public void Add(string description)
     {
         var todoItems = Load();
 
@@ -41,8 +41,6 @@ public class JsonTaskStore : ITaskStore
 
         todoItems.Add(todoItem);
         Save(todoItems);
-        
-        return todoItem;
     }
 
     public void Update(int id, string newDescription)

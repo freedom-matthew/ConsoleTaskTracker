@@ -6,8 +6,8 @@ namespace ConsoleTaskTracker.Persistence;
 public interface ITaskStore
 {
     List<TodoItem> GetAll();
-    TodoItem Add(string description);
+    void Add(string description);
     void Update(int id, string newDescription);
-    void Delete(int id);
     void SetStatus(int id, TodoItemStatus status);
+    void Delete(int id);
 }

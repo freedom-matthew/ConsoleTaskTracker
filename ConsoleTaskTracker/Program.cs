@@ -1,60 +1,51 @@
-﻿using System;
-using ConsoleTaskTracker.Persistence;
+﻿using ConsoleTaskTracker.Persistence;
 using ConsoleTaskTracker.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ConsoleTaskTracker;
+var services = new ServiceCollection();
+services.AddSingleton<TodoListService>();
+services.AddSingleton<ITaskStore, JsonTaskStore>();
+services.AddSingleton<ICommandHandler, CommandHandler>();
 
-public static class Program
+var provider = services.BuildServiceProvider();
+
+while (true)
 {
-    public static void Main(string[] args)
+    Console.WriteLine("Please enter command (add, update, delete, list, mark-in-progress, mark-done), or type 'exit' to end the program.");
+    Console.Write("> ");
+    var userInput = Console.ReadLine();
+
+    if (string.IsNullOrWhiteSpace(userInput))
     {
-        var services = new ServiceCollection();
-        services.AddSingleton<TodoListService>();
-        services.AddSingleton<ITaskStore, JsonTaskStore>();
-        services.AddSingleton<ICommandHandler, CommandHandler>();
-        
-        var provider = services.BuildServiceProvider();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("You entered no command. Please try again.");
+        Console.ResetColor();
+        continue;
+    }
 
-        while (true)
-        {
-            Console.WriteLine("Please enter command (add, update, delete, list, mark-in-progress, mark-done), or type 'exit' to end the program.");
-            Console.Write("> ");
-            var userInput = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You entered no command. Please try again.");
-                Console.ResetColor();
-                continue;
-            }
-
-            if (userInput.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase))
-            {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("Exiting the application. Goodbye!");
-                Console.ResetColor();
-                break;
-            }
-            
-            var handler = provider.GetRequiredService<ICommandHandler>();
-            try
-            {
-                handler.Handle(userInput);
-            }
-            catch (FormatException ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Input processing error: " + ex.Message);
-                Console.ResetColor();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Unexpected error: " + ex.Message);
-                Console.ResetColor();
-            }
-        }
+    if (userInput.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase))
+    {
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.WriteLine("Exiting the application. Goodbye!");
+        Console.ResetColor();
+        break;
+    }
+    
+    var handler = provider.GetRequiredService<ICommandHandler>();
+    try
+    {
+        handler.Handle(userInput);
+    }
+    catch (FormatException ex)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Input processing error: " + ex.Message);
+        Console.ResetColor();
+    }
+    catch (Exception ex)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Unexpected error: " + ex.Message);
+        Console.ResetColor();
     }
 }

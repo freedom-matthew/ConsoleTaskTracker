@@ -39,4 +39,4 @@ Run the app from the command line with different commands:
 
 ---
 
-https://github.com/freedom-matthew/ConsoleTaskTracker.git
+https://github.com/freedom-matthew/ConsoleTaskTracker

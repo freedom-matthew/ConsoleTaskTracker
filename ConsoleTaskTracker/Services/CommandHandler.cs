@@ -115,7 +115,7 @@ public class CommandHandler(TodoListService service) : ICommandHandler
             }
             else
             {
-                PrintError($"For command {command} you must leave second argument or enter a status.");
+                PrintError($"For command {command} you must omit second argument or enter a status.");
             }
         }
         else

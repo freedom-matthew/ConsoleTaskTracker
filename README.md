@@ -1,5 +1,3 @@
-[https://github.com/freedom-matthew/ConsoleTaskTracker](https://roadmap.sh/projects/task-tracker)
-
 # Console Task Tracker
 
 A simple **command-line task tracking application**.  
@@ -38,3 +36,7 @@ Run the app from the command line with different commands:
 - dotnet run -- delete 1
 - dotnet run -- list
 - dotnet run -- list in-progress
+
+---
+
+https://roadmap.sh/projects/task-tracker

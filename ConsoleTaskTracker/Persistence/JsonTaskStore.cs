@@ -8,7 +8,7 @@ using ConsoleTaskTracker.Entities;
 
 namespace ConsoleTaskTracker.Persistence;
 
-public class JsonTaskStore
+public class JsonTaskStore : ITaskStore
 {
     private readonly string _filePath;
     private readonly JsonSerializerOptions _jsonOptions = new()

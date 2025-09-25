@@ -5,45 +5,45 @@ using ConsoleTaskTracker.Persistence;
 
 namespace ConsoleTaskTracker.Services;
 
-public static class TodoListService
+public class TodoListService(ITaskStore store)
 {
-    private static readonly JsonTaskStore Store = new();
+    private readonly ITaskStore _store = store ?? throw new ArgumentNullException(nameof(store));
 
-    public static void AddTodoItem(string description)
+    public void AddTodoItem(string description)
     {
-        var item = Store.Add(description);
+        var item = _store.Add(description);
         Console.WriteLine($"Task added successfully (ID: {item.Id})");
     }
 
-    public static void UpdateTodoItem(int id, string newDescription)
+    public void UpdateTodoItem(int id, string newDescription)
     {
-        Store.Update(id, newDescription);
+        _store.Update(id, newDescription);
         Console.WriteLine($"Task {id} updated.");
     }
 
-    public static void DeleteTodoItem(int id)
+    public void DeleteTodoItem(int id)
     {
-        Store.Delete(id);
+        _store.Delete(id);
         Console.WriteLine($"Task {id} deleted.");
     }
 
-    public static void SetStatus(int id, TodoItemStatus status)
+    public void SetStatus(int id, TodoItemStatus status)
     {
-        Store.SetStatus(id, status);
+        _store.SetStatus(id, status);
         Console.WriteLine($"Task {id} set to {status}.");
     }
 
-    public static void ListTodoItems()
+    public void ListTodoItems()
     {
-        var items = Store.GetAll().OrderBy(i => i.Id).ToList();
+        var items = _store.GetAll().OrderBy(i => i.Id).ToList();
         if (items.Count == 0) { Console.WriteLine("(no tasks)"); return; }
         foreach (var t in items)
             Print(t);
     }
 
-    public static void ListTodoItemsByStatus(TodoItemStatus status)
+    public void ListTodoItemsByStatus(TodoItemStatus status)
     {
-        var items = Store.GetAll()
+        var items = _store.GetAll()
             .Where(i => i.Status == status)
             .OrderBy(i => i.Id)
             .ToList();

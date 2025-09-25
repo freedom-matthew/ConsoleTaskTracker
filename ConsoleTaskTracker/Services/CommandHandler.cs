@@ -4,8 +4,10 @@ using ConsoleTaskTracker.Entities;
 
 namespace ConsoleTaskTracker.Services;
 
-public class CommandHandler : ICommandHandler
+public class CommandHandler(TodoListService service) : ICommandHandler
 {
+    private readonly TodoListService _service = service ?? throw new ArgumentNullException(nameof(service));
+
     public void Handle(string userInput)
     {
         var arguments = userInput.Split(' ');
@@ -19,7 +21,7 @@ public class CommandHandler : ICommandHandler
             case "add":
             {
                 var description = string.Join(' ', arguments.Skip(1));
-                TodoListService.AddTodoItem(description);
+                _service.AddTodoItem(description);
                 PrintSuccess($"TodoItem '{description}' has been added.", ConsoleColor.Green);
                 break;
             }
@@ -30,7 +32,7 @@ public class CommandHandler : ICommandHandler
             {
                 var todoItemId = int.Parse(arguments[1]);
                 var newDescription = string.Join(' ', arguments.Skip(2));
-                TodoListService.UpdateTodoItem(todoItemId, newDescription);
+                _service.UpdateTodoItem(todoItemId, newDescription);
                 PrintSuccess($"TodoItem {todoItemId} has been updated.", ConsoleColor.Yellow);
                 break;
             }
@@ -40,15 +42,15 @@ public class CommandHandler : ICommandHandler
             case "delete":
             {
                 var todoItemId = int.Parse(arguments[1]);
-                TodoListService.DeleteTodoItem(todoItemId);
+                _service.DeleteTodoItem(todoItemId);
                 PrintSuccess($"TodoItem {todoItemId} has been deleted.", ConsoleColor.Red);
                 break;
             }
             case "list" when arguments.Length == 1:
-                TodoListService.ListTodoItems();
+                _service.ListTodoItems();
                 break;
             case "list" when arguments.Length == 2 && Enum.TryParse<TodoItemStatus>(arguments[1], true, out var status):
-                TodoListService.ListTodoItemsByStatus(status);
+                _service.ListTodoItemsByStatus(status);
                 break;
             case "list":
                 PrintError("Usage: list [todo|in-progress|done]");
@@ -61,7 +63,7 @@ public class CommandHandler : ICommandHandler
                 var todoItemId = int.Parse(arguments[1]);
                 var markStatus = command == "mark-done" ? TodoItemStatus.Done : TodoItemStatus.InProgress;
                 Console.ForegroundColor = markStatus == TodoItemStatus.Done ? ConsoleColor.Cyan : ConsoleColor.Blue;
-                TodoListService.SetStatus(todoItemId, markStatus);
+                _service.SetStatus(todoItemId, markStatus);
                 Console.WriteLine($"TodoItem {todoItemId} marked as {markStatus}.");
                 Console.ResetColor();
                 break;

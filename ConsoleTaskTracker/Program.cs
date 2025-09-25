@@ -1,5 +1,7 @@
 ﻿using System;
+using ConsoleTaskTracker.Persistence;
 using ConsoleTaskTracker.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ConsoleTaskTracker;
 
@@ -7,6 +9,13 @@ public static class Program
 {
     public static void Main(string[] args)
     {
+        var services = new ServiceCollection();
+        services.AddSingleton<TodoListService>();
+        services.AddSingleton<ITaskStore, JsonTaskStore>();
+        services.AddSingleton<ICommandHandler, CommandHandler>();
+        
+        var provider = services.BuildServiceProvider();
+
         while (true)
         {
             Console.WriteLine("Please enter command (add, update, delete, list, mark-in-progress, mark-done), or type 'exit' to end the program.");
@@ -29,7 +38,7 @@ public static class Program
                 break;
             }
             
-            ICommandHandler handler = new CommandHandler();
+            var handler = provider.GetRequiredService<ICommandHandler>();
             try
             {
                 handler.Handle(userInput);
